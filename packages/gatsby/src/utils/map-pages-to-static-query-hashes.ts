@@ -1,6 +1,7 @@
 import { uniqBy, List } from "lodash"
 import { IGatsbyState } from "../redux/types"
 import { Stats } from "webpack"
+import { map } from "bluebird"
 
 interface ICompilation {
   modules: IModule[]
@@ -19,14 +20,15 @@ interface IModule extends Omit<Stats.FnModules, "identifier" | "reasons"> {
 
 const mapComponentsToStaticQueryHashes = (
   staticQueryComponents: IGatsbyState["staticQueryComponents"]
-): Map<string, string> =>
-  Array.from(staticQueryComponents).reduce(
-    (map, [, { componentPath, hash }]) => {
-      map.set(componentPath, hash)
-      return map
-    },
-    new Map()
-  )
+): Map<string, string> => {
+  const map = new Map()
+
+  staticQueryComponents.forEach(({ componentPath, hash }) => {
+    map.set(componentPath, hash)
+  })
+
+  return map
+}
 
 /* This function takes the current Redux state and a compilation
  * object from webpack and returns a map of unique templates
