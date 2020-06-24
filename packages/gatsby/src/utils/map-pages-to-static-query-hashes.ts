@@ -1,7 +1,6 @@
 import { uniqBy, List } from "lodash"
 import { IGatsbyState } from "../redux/types"
 import { Stats } from "webpack"
-import { map } from "bluebird"
 
 interface ICompilation {
   modules: IModule[]
