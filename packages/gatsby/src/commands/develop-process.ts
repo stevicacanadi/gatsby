@@ -137,5 +137,5 @@ module.exports = async (program: IProgram): Promise<void> => {
   queryWatcher.startWatchDeletePage()
   const app = express()
 
-  await startWebpackServer({ program, app, workerPool })
+  await startWebpackServer({ program, app, workerPool, store })
 }
