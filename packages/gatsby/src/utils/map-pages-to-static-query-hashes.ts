@@ -112,18 +112,18 @@ export function mapTemplatesToStaticQueryHashes(
 
       const uniqDependents = uniqBy(nonTerminalDependents, d => d?.identifier())
 
-      for (const x of uniqDependents) {
-        if (x.resource) {
-          result.add(x.resource)
+      for (const uniqDependent of uniqDependents) {
+        if (uniqDependent.resource) {
+          result.add(uniqDependent.resource)
         }
 
         if (
-          x?.resource?.includes(`gatsby-browser.js`) &&
+          uniqDependent?.resource?.includes(`gatsby-browser.js`) &&
           staticQueryModuleComponentPath
         ) {
           globalStaticQueries.add(staticQueryModuleComponentPath)
         }
-        getDepsFn(x)
+        getDepsFn(uniqDependent)
       }
 
       return result
