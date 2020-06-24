@@ -186,7 +186,7 @@ export function mapTemplatesToStaticQueryHashes(
           }
         }
       )
-      map.set(page, staticQueryHashes)
+      map.set(page, staticQueryHashes.sort())
       return map
     },
     new Map()
