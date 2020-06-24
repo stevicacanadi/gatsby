@@ -163,36 +163,38 @@ export function mapTemplatesToStaticQueryHashes(
   })
 
   // For every known page, we get queries
-  const mapOfTemplatesToStaticQueryHashes = Array.from(components).reduce(
-    (map, [page]) => {
-      const staticQueryHashes = [...globalStaticQueryHashes]
+  const mapOfTemplatesToStaticQueryHashes = new Map()
 
-      // Does this page contain an inline static query?
-      if (mapOfComponentsToStaticQueryHashes.has(page)) {
-        const hash = mapOfComponentsToStaticQueryHashes.get(page)
-        if (hash) {
-          staticQueryHashes.push(hash)
-        }
+  components.forEach(page => {
+    const staticQueryHashes = [...globalStaticQueryHashes]
+
+    // Does this page contain an inline static query?
+    if (mapOfComponentsToStaticQueryHashes.has(page.componentPath)) {
+      const hash = mapOfComponentsToStaticQueryHashes.get(page.componentPath)
+      if (hash) {
+        staticQueryHashes.push(hash)
       }
+    }
 
-      // Check dependencies
-      mapOfStaticQueryComponentsToDependants.forEach(
-        (setOfDependants, staticQueryComponentPath) => {
-          if (setOfDependants.has(page)) {
-            const hash = mapOfComponentsToStaticQueryHashes.get(
-              staticQueryComponentPath
-            )
-            if (hash) {
-              staticQueryHashes.push(hash)
-            }
+    // Check dependencies
+    mapOfStaticQueryComponentsToDependants.forEach(
+      (setOfDependants, staticQueryComponentPath) => {
+        if (setOfDependants.has(page.componentPath)) {
+          const hash = mapOfComponentsToStaticQueryHashes.get(
+            staticQueryComponentPath
+          )
+          if (hash) {
+            staticQueryHashes.push(hash)
           }
         }
-      )
-      map.set(page, staticQueryHashes.sort())
-      return map
-    },
-    new Map()
-  )
+      }
+    )
+
+    mapOfTemplatesToStaticQueryHashes.set(
+      page.componentPath,
+      staticQueryHashes.sort()
+    )
+  })
 
   return mapOfTemplatesToStaticQueryHashes
 }
